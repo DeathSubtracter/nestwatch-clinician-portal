@@ -12,3 +12,5 @@
 ## Architecture
 - All demo data lives in `src/data/demoData.ts` behind `getDashboard()`; components never hardcode patient values — so the source can be swapped for `/demo/maya-dashboard.json` in one place.
 - Frontend-only: no backend, auth, or network APIs — this is a demo for an existing external backend.
+- Keep the shared navigation shell in the root layout and use router Links with a controlled Radix sheet below the desktop breakpoint; this preserves route state and accessible dismissal.
+- Overview sections use the full content width with responsive internal grids rather than a tall secondary rail; this keeps clinical comparisons aligned and compact.
