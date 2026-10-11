@@ -3,21 +3,22 @@ import type { DemoData } from "@/data/demoData";
 import { cn } from "@/lib/utils";
 import { CoverageTag, DirectionGlyph, Sparkline } from "./primitives";
 import { SectionHeading } from "./AppShell";
+import { Button } from "@/components/ui/button";
 
 export function PatientHeader({ patient }: { patient: DemoData["patient"] }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-6 animate-rise">
-      <div>
-        <div className="mb-3 inline-flex items-center rounded-md border border-hairline px-2 py-0.5 text-[11.5px] text-muted-foreground">
+    <header className="mb-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_460px] xl:items-center animate-rise">
+      <div className="min-w-0">
+        <div className="mb-2 inline-flex items-center rounded-md border border-hairline px-2 py-0.5 text-[11.5px] text-muted-foreground">
           Synthetic demo patient
         </div>
         <h1 className="text-[40px] font-semibold leading-none tracking-[-0.035em]">{patient.name}</h1>
-        <p className="mt-3 text-[15px] text-muted-foreground">
+        <p className="mt-2 text-[15px] text-muted-foreground">
           {patient.gestational_weeks} weeks pregnant <span className="text-subtle">•</span> {patient.trimester}{" "}
           <span className="text-subtle">•</span> {patient.condition}
         </p>
       </div>
-      <dl className="flex gap-10 text-[13px]">
+      <dl className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-5 text-[13px]">
         <div>
           <dt className="text-muted-foreground">Last GLP-1 dose</dt>
           <dd className="num mt-1 font-medium">{patient.last_glp1_dose}</dd>
@@ -35,9 +36,9 @@ export function StatusSummary({ status }: { status: DemoData["pattern_status"] }
   return (
     <section
       aria-label="Current Nestwatch status"
-      className="relative overflow-hidden rounded-[22px] border border-watch/25 bg-watch-soft p-7 animate-rise sm:p-9"
+      className="relative overflow-hidden rounded-[22px] border border-watch/25 bg-watch-soft p-5 animate-rise sm:p-6 lg:px-7 lg:py-6"
     >
-      <div className="grid gap-8 md:grid-cols-[1.3fr_1fr] md:gap-12">
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_1fr] lg:gap-8">
         <div>
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
@@ -47,24 +48,25 @@ export function StatusSummary({ status }: { status: DemoData["pattern_status"] }
             <span className="text-[13px] font-semibold uppercase tracking-[0.14em] text-watch-ink">Watch</span>
             <span className="text-[13px] text-watch-ink/70">· Multisignal status</span>
           </div>
-          <h2 className="mt-5 max-w-[30ch] text-[26px] font-semibold leading-[1.2] tracking-[-0.025em] sm:text-[28px]">
+          <h2 className="mt-3 max-w-[30ch] text-[26px] font-semibold leading-[1.2] tracking-[-0.025em] sm:text-[28px]">
             {status.headline}
           </h2>
-          <p className="mt-3 max-w-[52ch] text-[15px] leading-relaxed text-muted-foreground">{status.summary}</p>
-          <a
-            href="#what-changed"
-            className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-watch-ink transition-opacity hover:opacity-75"
+          <p className="mt-2 max-w-[52ch] text-[15px] leading-relaxed text-muted-foreground">{status.summary}</p>
+          <Button
+            variant="ghost"
+            onClick={() => document.getElementById("what-changed")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" })}
+            className="mt-3 h-8 justify-start gap-1.5 px-0 text-[14px] font-medium text-watch-ink hover:bg-transparent hover:opacity-75"
           >
             View what changed <ArrowDown className="h-3.5 w-3.5" />
-          </a>
+          </Button>
         </div>
         <ul className="divide-y divide-watch/15 self-center">
           {status.signals.map((s) => (
-            <li key={s.label} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+            <li key={s.label} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 py-2.5 first:pt-0 last:pb-0">
               <span className="text-[15px] font-medium">{s.label}</span>
               <span
                 className={cn(
-                  "inline-flex items-center gap-1.5 text-[13px]",
+                  "flex flex-wrap items-center justify-end gap-1.5 text-[12px]",
                   s.contributing ? "font-medium text-watch-ink" : "text-muted-foreground",
                 )}
               >
@@ -96,9 +98,9 @@ const metricOrder = [
 
 export function CurrentMetrics({ data }: { data: DemoData }) {
   return (
-    <section className="mt-12">
-      <SectionHeading title="Current measurements" subtitle={`Latest available values · as of Oct 10, 2026`} />
-      <div className="surface grid grid-cols-2 overflow-hidden md:grid-cols-3 xl:grid-cols-6">
+    <section className="mt-7">
+      <SectionHeading title="Current measurements" subtitle={`Latest available values · as of ${new Date(`${data.as_of}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}`} />
+      <div className="surface grid grid-cols-1 overflow-hidden sm:grid-cols-2 xl:grid-cols-3">
         {metricOrder.map((m, i) => {
           const v = data.latest_measurements[m.key];
           const contributing = m.key === "glucose" || m.key === "resting_hr";
@@ -108,10 +110,9 @@ export function CurrentMetrics({ data }: { data: DemoData }) {
             <div
               key={m.key}
               className={cn(
-                "flex flex-col justify-between gap-4 border-hairline p-5 transition-colors duration-200 hover:bg-background/60",
-                i % 2 === 0 && "border-r md:border-r-0",
-                "border-b xl:border-b-0",
-                "md:[&:not(:nth-child(3n))]:border-r xl:[&:not(:last-child)]:border-r",
+                "grid grid-cols-[minmax(0,1fr)_88px] items-center gap-x-4 gap-y-2 border-hairline px-5 py-4 transition-colors duration-200 hover:bg-background/60",
+                i < 5 && "border-b",
+                "sm:[&:nth-last-child(-n+2)]:border-b-0 sm:[&:nth-child(odd)]:border-r xl:[&:nth-child(odd)]:border-r-0 xl:[&:not(:nth-child(3n))]:border-r xl:[&:nth-last-child(-n+3)]:border-b-0",
               )}
             >
               <div>
@@ -125,7 +126,7 @@ export function CurrentMetrics({ data }: { data: DemoData }) {
                 </div>
               </div>
               {s && !limited ? <Sparkline data={s} color={m.color} height={28} /> : <div className="h-7 rounded-md border border-dashed border-border" aria-hidden />}
-              <div className="text-[11px] text-subtle">
+              <div className="col-span-2 text-[11px] text-subtle">
                 {v.source} · {v.updated}
               </div>
             </div>
@@ -151,10 +152,10 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
     weight: "var(--c-weight)",
   };
   return (
-    <section className="mt-14">
+    <section className="mt-8">
       <SectionHeading id="what-changed" title="What changed" subtitle="Reference period compared with recent measurements" />
       <div className="surface overflow-hidden">
-        <div className="hidden grid-cols-[1.1fr_1.6fr_1fr_1.2fr] gap-6 border-b border-hairline px-6 py-3 text-[12px] text-muted-foreground md:grid">
+        <div className="hidden grid-cols-[1.1fr_2fr_1fr_1fr] gap-4 border-b border-hairline px-5 py-3 text-[12px] text-muted-foreground md:grid">
           <div>Metric</div>
           <div>
             Reference <span className="text-subtle">{oc.reference_period}</span> → Recent{" "}
@@ -170,7 +171,7 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
             return (
               <li
                 key={r.key}
-                className="grid grid-cols-2 items-center gap-x-6 gap-y-3 border-b border-hairline px-6 py-5 last:border-b-0 md:grid-cols-[1.1fr_1.6fr_1fr_1.2fr]"
+                className="grid grid-cols-2 items-center gap-x-4 gap-y-3 border-b border-hairline px-5 py-3.5 last:border-b-0 md:grid-cols-[1.1fr_2fr_1fr_1fr]"
               >
                 <div className="flex items-center gap-2.5">
                   <span className={cn("h-6 w-[3px] rounded-full", r.contributing ? "bg-watch" : "bg-border")} aria-hidden />
@@ -179,7 +180,7 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
                     <div className="text-[11.5px] text-subtle">{r.contributing ? "Contributing" : "Context"}</div>
                   </div>
                 </div>
-                <div className="num text-[17px]">
+                <div className="num min-w-0 text-[16px]">
                   {hasData ? (
                     <>
                       <span className="text-muted-foreground">{r.reference}</span>
@@ -207,14 +208,15 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
 
 export function MultisignalExplanation({ status }: { status: DemoData["pattern_status"] }) {
   return (
-    <section className="mt-14">
+    <section className="mt-8">
       <SectionHeading title="Why Nestwatch is watching" subtitle="Nestwatch considers several changes together rather than relying on a single measurement threshold." />
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="surface p-6">
+      <div className="overflow-hidden rounded-xl border border-hairline bg-surface">
+      <div className="grid md:grid-cols-2">
+        <div className="border-b border-hairline p-5 md:border-r md:border-b-0">
           <div className="eyebrow flex items-center gap-2 !text-watch-ink">
             <span className="h-1.5 w-1.5 rounded-full bg-watch" /> Contributing
           </div>
-          <ul className="mt-5 space-y-5">
+          <ul className="mt-3 space-y-3">
             {status.contributing.map((c) => (
               <li key={c.label}>
                 <div className="text-[15px] font-medium">{c.label}</div>
@@ -223,11 +225,11 @@ export function MultisignalExplanation({ status }: { status: DemoData["pattern_s
             ))}
           </ul>
         </div>
-        <div className="surface p-6">
+        <div className="p-5">
           <div className="eyebrow flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-stable" /> Context / Stable
           </div>
-          <ul className="mt-5 space-y-5">
+          <ul className="mt-3 space-y-3">
             {status.context.map((c) => (
               <li key={c.label}>
                 <div className="text-[15px] font-medium">{c.label}</div>
@@ -237,9 +239,10 @@ export function MultisignalExplanation({ status }: { status: DemoData["pattern_s
           </ul>
         </div>
       </div>
-      <div className="mt-4 rounded-[18px] border border-hairline bg-muted/60 px-6 py-5">
+      <div className="border-t border-hairline bg-muted/60 px-5 py-4">
         <div className="eyebrow">Current interpretation</div>
         <p className="mt-2 max-w-[75ch] text-[15px] leading-relaxed">{status.interpretation}</p>
+      </div>
       </div>
     </section>
   );
@@ -248,14 +251,14 @@ export function MultisignalExplanation({ status }: { status: DemoData["pattern_s
 export function PatientContext({ patient }: { patient: DemoData["patient"] }) {
   const items = [
     { icon: Baby, label: "Pregnancy", value: `${patient.gestational_weeks} weeks`, sub: patient.trimester },
-    { icon: Droplet, label: "Diabetes", value: "Type 2", sub: `Since ${patient.diabetes_since}` },
+    { icon: Droplet, label: "Diabetes", value: patient.condition.replace(" diabetes", ""), sub: `Since ${patient.diabetes_since}` },
     { icon: Pill, label: "Medication transition", value: `Last GLP-1: ${patient.last_glp1_dose}`, sub: `Transition: ${patient.transition_date}` },
     { icon: Stethoscope, label: "Current treatment", value: patient.current_treatment, sub: null },
   ];
   return (
-    <div className="surface p-6">
+    <section className="mt-8 border-t border-hairline pt-5" aria-label="Patient context">
       <h3 className="text-[16px] font-semibold tracking-tight">Patient context</h3>
-      <ul className="mt-5 space-y-5">
+      <ul className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1.5fr_1.5fr]">
         {items.map(({ icon: Icon, label, value, sub }) => (
           <li key={label} className="flex gap-3">
             <Icon className="mt-0.5 h-4 w-4 shrink-0 text-subtle" strokeWidth={1.75} />
@@ -267,9 +270,9 @@ export function PatientContext({ patient }: { patient: DemoData["patient"] }) {
           </li>
         ))}
       </ul>
-      <div className="mt-6 border-t border-hairline pt-5">
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-hairline pt-3">
         <div className="text-[12px] text-muted-foreground">Recent symptoms</div>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {patient.symptoms.map((s) => (
             <span key={s.label} className="rounded-lg bg-muted px-2.5 py-1 text-[13px]">
               {s.label} <span className="text-subtle">· {s.date}</span>
@@ -277,17 +280,17 @@ export function PatientContext({ patient }: { patient: DemoData["patient"] }) {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
 export function DataQuality({ items }: { items: DemoData["data_quality"] }) {
   return (
-    <div className="surface p-6">
-      <h3 className="text-[16px] font-semibold tracking-tight">Data coverage</h3>
-      <ul className="mt-4 divide-y divide-hairline">
+    <section className="mt-6 border-t border-hairline pt-4" aria-label="Data coverage">
+      <h3 className="text-[14px] font-medium text-muted-foreground">Data coverage</h3>
+      <ul className="mt-3 grid gap-x-5 gap-y-3 sm:grid-cols-3 xl:grid-cols-5">
         {items.map((d) => (
-          <li key={d.metric} className="flex items-center justify-between gap-3 py-2.5">
+          <li key={d.metric} className="flex min-w-0 flex-col gap-1">
             <div>
               <div className="text-[14px]">{d.metric}</div>
               {d.status !== "available" && <div className="text-[12px] text-muted-foreground">{d.note}</div>}
@@ -296,6 +299,6 @@ export function DataQuality({ items }: { items: DemoData["data_quality"] }) {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }

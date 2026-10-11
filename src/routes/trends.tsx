@@ -12,6 +12,8 @@ export const Route = createFileRoute("/trends")({
       { name: "description", content: "Longitudinal glucose, blood pressure, heart rate, HRV, sleep and weight trends for Maya." },
       { property: "og:title", content: "Trends — Nestwatch" },
       { property: "og:description", content: "Inspect 30-day longitudinal measurements against the reference period." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Trends,
@@ -35,9 +37,10 @@ function Trends() {
     metric === "bp"
       ? data.series.bp
       : data.series[metric].map((p) => ({ date: p.date, value: p.value }));
-  const refStart = data.series.glucose[0]!.date;
-  const refEnd = data.series.glucose[REFERENCE_SPLIT - 1]!.date;
-  const recEnd = data.series.glucose.at(-1)!.date;
+  const refStart = data.series.glucose[0]?.date;
+  const refEnd = data.series.glucose[REFERENCE_SPLIT - 1]?.date;
+  const recEnd = data.series.glucose.at(-1)?.date;
+  if (!refStart || !refEnd || !recEnd) return <p>No measurements available.</p>;
 
   return (
     <>

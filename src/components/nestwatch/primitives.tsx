@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import type { Coverage, DailyPoint, Direction } from "@/data/demoData";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function DirectionGlyph({ direction, tone = "muted" }: { direction: Direction; tone?: "watch" | "muted" }) {
   const cls = cn("h-3.5 w-3.5", tone === "watch" ? "text-watch-ink" : "text-muted-foreground");
@@ -29,7 +30,7 @@ export function Sparkline({ data, color, height = 32 }: { data: DailyPoint[]; co
           </defs>
           <XAxis dataKey="date" hide />
           <YAxis hide domain={[min - pad, max + pad]} />
-          <Area type="monotone" dataKey="value" stroke={color} strokeWidth={1.5} fill={`url(#${id})`} connectNulls isAnimationActive={false} />
+          <Area type="monotone" dataKey="value" stroke={color} strokeWidth={1.5} fill={`url(#${id})`} connectNulls={false} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -57,7 +58,8 @@ export function SegmentedControl<T extends string>({ options, value, onChange, l
   return (
     <div role="tablist" aria-label={label} className="inline-flex flex-wrap gap-1 rounded-xl bg-muted p-1">
       {options.map((o) => (
-        <button
+        <Button
+          variant="ghost"
           key={o.value}
           role="tab"
           type="button"
@@ -69,7 +71,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange, l
           )}
         >
           {o.label}
-        </button>
+        </Button>
       ))}
     </div>
   );

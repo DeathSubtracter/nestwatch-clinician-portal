@@ -1,6 +1,9 @@
-import { Link } from "@tanstack/react-router";
-import { Activity, CalendarRange, LayoutGrid, LineChart, Menu, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Activity, CalendarRange, LayoutGrid, LineChart, Menu } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { getDashboard } from "@/data/demoData";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutGrid },
@@ -42,11 +45,12 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function PatientChip() {
+  const { patient } = getDashboard();
   return (
     <div className="rounded-xl border border-hairline bg-surface p-3">
       <div className="eyebrow">Patient</div>
-      <div className="mt-1 text-[14px] font-medium">Maya</div>
-      <div className="text-[12px] text-muted-foreground">10 wks · T2D</div>
+      <div className="mt-1 text-[14px] font-medium">{patient.name}</div>
+      <div className="text-[12px] text-muted-foreground">{patient.gestational_weeks} wks · {patient.condition}</div>
     </div>
   );
 }
@@ -61,6 +65,14 @@ export function PrototypeLabel() {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
   return (
     <div className="min-h-screen">
       <aside className="fixed inset-y-0 left-0 hidden w-[236px] flex-col justify-between border-r border-sidebar-border bg-sidebar px-4 py-6 lg:flex">
@@ -74,25 +86,24 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-hairline bg-background/90 px-5 py-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-hairline bg-background/90 px-5 py-3 backdrop-blur lg:hidden">
         <Wordmark />
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((o) => !o)}
-          className="rounded-lg p-2 text-muted-foreground hover:bg-accent"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Open menu" title="Open menu" className="shrink-0 text-muted-foreground">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" aria-describedby={undefined} className="flex w-[280px] max-w-[85vw] flex-col bg-sidebar px-4 py-6">
+            <SheetTitle className="px-2"><Wordmark /></SheetTitle>
+            <div className="mt-6"><NavLinks onNavigate={() => setOpen(false)} /></div>
+            <div className="mt-auto space-y-4"><PatientChip /><PrototypeLabel /></div>
+          </SheetContent>
+        </Sheet>
       </header>
-      {open && (
-        <div className="border-b border-hairline bg-sidebar px-4 py-3 lg:hidden">
-          <NavLinks onNavigate={() => setOpen(false)} />
-        </div>
-      )}
 
       <main className="lg:pl-[236px]">
-        <div className="mx-auto max-w-[1180px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">{children}</div>
+        <div className="mx-auto max-w-[1180px] px-5 py-6 sm:px-8 lg:px-8 lg:py-7 xl:px-10">{children}</div>
         <footer className="mx-auto max-w-[1180px] px-5 pb-10 sm:px-8 lg:hidden"><PrototypeLabel /></footer>
       </main>
     </div>
@@ -101,8 +112,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 export function PageHeader({ eyebrow, title, subtitle, right }: { eyebrow?: string; title: string; subtitle?: ReactNode; right?: ReactNode }) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4 animate-rise">
-      <div>
+    <div className="mb-7 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 sm:flex sm:justify-between animate-rise">
+      <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
         <h1 className="text-[34px] font-semibold leading-tight tracking-[-0.03em]">{title}</h1>
         {subtitle && <div className="mt-2 text-[15px] text-muted-foreground">{subtitle}</div>}
@@ -114,8 +125,8 @@ export function PageHeader({ eyebrow, title, subtitle, right }: { eyebrow?: stri
 
 export function SectionHeading({ title, subtitle, id, right }: { title: string; subtitle?: string; id?: string; right?: ReactNode }) {
   return (
-    <div id={id} className="mb-5 flex scroll-mt-8 flex-wrap items-end justify-between gap-3">
-      <div>
+    <div id={id} className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] scroll-mt-24 items-end gap-3 sm:flex sm:justify-between lg:scroll-mt-6">
+      <div className="min-w-0">
         <h2 className="text-[21px] font-semibold tracking-[-0.02em]">{title}</h2>
         {subtitle && <p className="mt-1 text-[14px] text-muted-foreground">{subtitle}</p>}
       </div>
