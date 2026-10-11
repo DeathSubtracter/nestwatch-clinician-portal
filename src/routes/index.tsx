@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
 });
 
 export function StatusPill({ status }: { status: PatientSummary["status"] }) {
-  const tone = status === "watch" ? "bg-watch-soft text-watch" : "bg-accent text-muted-foreground";
+  const tone = status === "watch" ? "bg-watch-soft text-watch-ink" : "bg-accent text-muted-foreground";
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[12px] font-medium ${tone}`}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
