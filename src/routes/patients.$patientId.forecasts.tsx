@@ -4,7 +4,7 @@ import { PageHeader, SectionHeading } from "@/components/nestwatch/AppShell";
 import { ChartTooltip, axisProps } from "@/components/nestwatch/primitives";
 import { getDashboard, type DemoData } from "@/data/demoData";
 
-export const Route = createFileRoute("/forecasts")({
+export const Route = createFileRoute("/patients/$patientId/forecasts")({
   head: () => ({
     meta: [
       { title: "Forecasts — Nestwatch" },
@@ -107,7 +107,7 @@ function BPForecastCard({ fc }: { fc: DemoData["bp_forecast"] }) {
 }
 
 function Forecasts() {
-  const data = getDashboard();
+  const data = getDashboard(Route.useParams().patientId);
   return (
     <>
       <PageHeader

@@ -10,7 +10,7 @@ import {
   StatusSummary,
 } from "@/components/nestwatch/overview";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/patients/$patientId/")({
   head: () => ({
     meta: [
       { title: "Overview — Nestwatch" },
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Overview() {
-  const data = getDashboard();
+  const data = getDashboard(Route.useParams().patientId);
   return (
     <>
       <PatientHeader patient={data.patient} />

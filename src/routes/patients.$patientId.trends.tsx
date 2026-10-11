@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/nestwatch/AppShell";
 import { ChartTooltip, SegmentedControl, axisProps, fmtDay } from "@/components/nestwatch/primitives";
 import { REFERENCE_SPLIT, getDashboard } from "@/data/demoData";
 
-export const Route = createFileRoute("/trends")({
+export const Route = createFileRoute("/patients/$patientId/trends")({
   head: () => ({
     meta: [
       { title: "Trends — Nestwatch" },
@@ -30,7 +30,7 @@ const meta: Record<Metric, { label: string; unit: string; color: string; note: s
 };
 
 function Trends() {
-  const data = getDashboard();
+  const data = getDashboard(Route.useParams().patientId);
   const [metric, setMetric] = useState<Metric>("glucose");
   const m = meta[metric];
   const rows =
