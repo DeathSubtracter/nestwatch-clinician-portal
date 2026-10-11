@@ -35,8 +35,8 @@ function Trends() {
     metric === "bp"
       ? data.series.bp
       : data.series[metric].map((p) => ({ date: p.date, value: p.value }));
-  const refStart = data.series.glucose[0].date;
-  const refEnd = data.series.glucose[REFERENCE_SPLIT - 1].date;
+  const refStart = data.series.glucose[0]!.date;
+  const refEnd = data.series.glucose[REFERENCE_SPLIT - 1]!.date;
   const recEnd = data.series.glucose.at(-1)!.date;
 
   return (

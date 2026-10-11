@@ -23,7 +23,7 @@ const fmtTick = (t: number | string) =>
 
 function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
   const pts = fc.points.map((p) => ({ ...p, band: p.lower != null && p.upper != null ? [p.lower, p.upper] : null }));
-  const now = pts[287].t;
+  const now = pts[287]!.t;
   const end = pts.at(-1)!.t;
   return (
     <section className="surface p-6 sm:p-8 animate-rise">

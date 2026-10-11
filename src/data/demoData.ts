@@ -59,7 +59,7 @@ const weightDaily: DailyPoint[] = Array.from({ length: DAYS }, (_, i) => ({
 const bpDaily: BPPoint[] = (() => {
   const s = series(31, 119, 122.5, 3);
   const d = series(37, 78, 72.5, 2.5);
-  return s.map((p, i) => ({ date: p.date, sys: p.value, dia: d[i].value }));
+  return s.map((p, i) => ({ date: p.date, sys: p.value, dia: d[i]!.value }));
 })();
 
 // 24h glucose forecast at 5-minute cadence
