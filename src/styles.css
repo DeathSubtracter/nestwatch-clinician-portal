@@ -48,6 +48,9 @@
   --color-hrv: var(--c-hrv);
   --color-sleep: var(--c-sleep);
   --color-weight: var(--c-weight);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
   --shadow-soft: var(--shadow-soft);
   --shadow-float: var(--shadow-float);
 }
