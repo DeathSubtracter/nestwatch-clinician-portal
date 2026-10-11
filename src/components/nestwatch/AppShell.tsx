@@ -34,7 +34,7 @@ function useCurrentPatient() {
   return params.patientId ? getPatient(params.patientId) : undefined;
 }
 
-function PatientSwitcher({ current, onNavigate }: { current: PatientSummary; onNavigate?: () => void }) {
+function PatientSwitcher({ current, onNavigate }: { current: PatientSummary; onNavigate?: (() => void) | undefined }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const results = searchPatients(getPatients(), query);
