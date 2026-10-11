@@ -10,63 +10,98 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ForecastsRouteImport } from './routes/forecasts'
-import { Route as TimelineRouteImport } from './routes/timeline'
-import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as PatientsPatientIdRouteImport } from './routes/patients.$patientId'
+import { Route as PatientsPatientIdIndexRouteImport } from './routes/patients.$patientId.index'
+import { Route as PatientsPatientIdForecastsRouteImport } from './routes/patients.$patientId.forecasts'
+import { Route as PatientsPatientIdTimelineRouteImport } from './routes/patients.$patientId.timeline'
+import { Route as PatientsPatientIdTrendsRouteImport } from './routes/patients.$patientId.trends'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForecastsRoute = ForecastsRouteImport.update({
-  id: '/forecasts',
-  path: '/forecasts',
+const PatientsPatientIdRoute = PatientsPatientIdRouteImport.update({
+  id: '/patients/$patientId',
+  path: '/patients/$patientId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TimelineRoute = TimelineRouteImport.update({
-  id: '/timeline',
-  path: '/timeline',
-  getParentRoute: () => rootRouteImport,
+const PatientsPatientIdIndexRoute = PatientsPatientIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PatientsPatientIdRoute,
 } as any)
-const TrendsRoute = TrendsRouteImport.update({
+const PatientsPatientIdForecastsRoute =
+  PatientsPatientIdForecastsRouteImport.update({
+    id: '/forecasts',
+    path: '/forecasts',
+    getParentRoute: () => PatientsPatientIdRoute,
+  } as any)
+const PatientsPatientIdTimelineRoute =
+  PatientsPatientIdTimelineRouteImport.update({
+    id: '/timeline',
+    path: '/timeline',
+    getParentRoute: () => PatientsPatientIdRoute,
+  } as any)
+const PatientsPatientIdTrendsRoute = PatientsPatientIdTrendsRouteImport.update({
   id: '/trends',
   path: '/trends',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PatientsPatientIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId': typeof PatientsPatientIdRouteWithChildren
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId/': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId': typeof PatientsPatientIdRouteWithChildren
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId/': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forecasts' | '/timeline' | '/trends'
+  fullPaths:
+    | '/'
+    | '/patients/$patientId'
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forecasts' | '/timeline' | '/trends'
-  id: '__root__' | '/' | '/forecasts' | '/timeline' | '/trends'
+  to:
+    | '/'
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId'
+  id:
+    | '__root__'
+    | '/'
+    | '/patients/$patientId'
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ForecastsRoute: typeof ForecastsRoute
-  TimelineRoute: typeof TimelineRoute
-  TrendsRoute: typeof TrendsRoute
+  PatientsPatientIdRoute: typeof PatientsPatientIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -78,35 +113,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forecasts': {
-      id: '/forecasts'
+    '/patients/$patientId': {
+      id: '/patients/$patientId'
+      path: '/patients/$patientId'
+      fullPath: '/patients/$patientId'
+      preLoaderRoute: typeof PatientsPatientIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/patients/$patientId/': {
+      id: '/patients/$patientId/'
+      path: '/'
+      fullPath: '/patients/$patientId/'
+      preLoaderRoute: typeof PatientsPatientIdIndexRouteImport
+      parentRoute: typeof PatientsPatientIdRoute
+    }
+    '/patients/$patientId/forecasts': {
+      id: '/patients/$patientId/forecasts'
       path: '/forecasts'
-      fullPath: '/forecasts'
-      preLoaderRoute: typeof ForecastsRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/patients/$patientId/forecasts'
+      preLoaderRoute: typeof PatientsPatientIdForecastsRouteImport
+      parentRoute: typeof PatientsPatientIdRoute
     }
-    '/timeline': {
-      id: '/timeline'
+    '/patients/$patientId/timeline': {
+      id: '/patients/$patientId/timeline'
       path: '/timeline'
-      fullPath: '/timeline'
-      preLoaderRoute: typeof TimelineRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/patients/$patientId/timeline'
+      preLoaderRoute: typeof PatientsPatientIdTimelineRouteImport
+      parentRoute: typeof PatientsPatientIdRoute
     }
-    '/trends': {
-      id: '/trends'
+    '/patients/$patientId/trends': {
+      id: '/patients/$patientId/trends'
       path: '/trends'
-      fullPath: '/trends'
-      preLoaderRoute: typeof TrendsRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/patients/$patientId/trends'
+      preLoaderRoute: typeof PatientsPatientIdTrendsRouteImport
+      parentRoute: typeof PatientsPatientIdRoute
     }
   }
 }
 
+interface PatientsPatientIdRouteChildren {
+  PatientsPatientIdForecastsRoute: typeof PatientsPatientIdForecastsRoute
+  PatientsPatientIdTimelineRoute: typeof PatientsPatientIdTimelineRoute
+  PatientsPatientIdTrendsRoute: typeof PatientsPatientIdTrendsRoute
+  PatientsPatientIdIndexRoute: typeof PatientsPatientIdIndexRoute
+}
+
+const PatientsPatientIdRouteChildren: PatientsPatientIdRouteChildren = {
+  PatientsPatientIdForecastsRoute: PatientsPatientIdForecastsRoute,
+  PatientsPatientIdTimelineRoute: PatientsPatientIdTimelineRoute,
+  PatientsPatientIdTrendsRoute: PatientsPatientIdTrendsRoute,
+  PatientsPatientIdIndexRoute: PatientsPatientIdIndexRoute,
+}
+
+const PatientsPatientIdRouteWithChildren =
+  PatientsPatientIdRoute._addFileChildren(PatientsPatientIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ForecastsRoute: ForecastsRoute,
-  TimelineRoute: TimelineRoute,
-  TrendsRoute: TrendsRoute,
+  PatientsPatientIdRoute: PatientsPatientIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

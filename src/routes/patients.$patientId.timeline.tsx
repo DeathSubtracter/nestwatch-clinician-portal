@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/nestwatch/AppShell";
 import { SegmentedControl } from "@/components/nestwatch/primitives";
 import { getDashboard } from "@/data/demoData";
 
-export const Route = createFileRoute("/timeline")({
+export const Route = createFileRoute("/patients/$patientId/timeline")({
   head: () => ({
     meta: [
       { title: "Timeline — Nestwatch" },
@@ -24,7 +24,7 @@ const icons = { measurement: Activity, sleep: Moon, symptom: MessageCircle, medi
 const catLabel = { measurement: "Measurement", sleep: "Sleep", symptom: "Symptom", medication: "Medication", pregnancy: "Pregnancy context" };
 
 function Timeline() {
-  const { timeline } = getDashboard();
+  const { timeline } = getDashboard(Route.useParams().patientId);
   const [filter, setFilter] = useState<Filter>("all");
   const events = timeline.filter((e) => filter === "all" || e.category === filter);
   return (

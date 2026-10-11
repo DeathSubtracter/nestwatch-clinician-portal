@@ -210,4 +210,4 @@ export const demoData = {
 };
 
 export type DemoData = typeof demoData;
-export const getDashboard = (): DemoData => demoData;
+export const getDashboard = (_patientId: string = "maya"): DemoData => demoData;
