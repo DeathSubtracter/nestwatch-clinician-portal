@@ -9,104 +9,119 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ForecastsRouteImport } from './routes/forecasts'
-import { Route as TimelineRouteImport } from './routes/timeline'
-import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as PatientsPatientIdIndexRouteImport } from './routes/patients.$patientId.index'
+import { Route as PatientsPatientIdForecastsRouteImport } from './routes/patients.$patientId.forecasts'
+import { Route as PatientsPatientIdTimelineRouteImport } from './routes/patients.$patientId.timeline'
+import { Route as PatientsPatientIdTrendsRouteImport } from './routes/patients.$patientId.trends'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PatientsPatientIdIndexRoute = PatientsPatientIdIndexRouteImport.update({
+  id: '/patients/$patientId/',
+  path: '/patients/$patientId/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForecastsRoute = ForecastsRouteImport.update({
-  id: '/forecasts',
-  path: '/forecasts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TimelineRoute = TimelineRouteImport.update({
-  id: '/timeline',
-  path: '/timeline',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TrendsRoute = TrendsRouteImport.update({
-  id: '/trends',
-  path: '/trends',
+const PatientsPatientIdForecastsRoute =
+  PatientsPatientIdForecastsRouteImport.update({
+    id: '/patients/$patientId/forecasts',
+    path: '/patients/$patientId/forecasts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PatientsPatientIdTimelineRoute =
+  PatientsPatientIdTimelineRouteImport.update({
+    id: '/patients/$patientId/timeline',
+    path: '/patients/$patientId/timeline',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PatientsPatientIdTrendsRoute = PatientsPatientIdTrendsRouteImport.update({
+  id: '/patients/$patientId/trends',
+  path: '/patients/$patientId/trends',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId/': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/forecasts': typeof ForecastsRoute
-  '/timeline': typeof TimelineRoute
-  '/trends': typeof TrendsRoute
+  '/patients/$patientId/forecasts': typeof PatientsPatientIdForecastsRoute
+  '/patients/$patientId/timeline': typeof PatientsPatientIdTimelineRoute
+  '/patients/$patientId/trends': typeof PatientsPatientIdTrendsRoute
+  '/patients/$patientId/': typeof PatientsPatientIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forecasts' | '/timeline' | '/trends'
+  fullPaths:
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forecasts' | '/timeline' | '/trends'
-  id: '__root__' | '/' | '/forecasts' | '/timeline' | '/trends'
+  to:
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId'
+  id:
+    | '__root__'
+    | '/patients/$patientId/forecasts'
+    | '/patients/$patientId/timeline'
+    | '/patients/$patientId/trends'
+    | '/patients/$patientId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ForecastsRoute: typeof ForecastsRoute
-  TimelineRoute: typeof TimelineRoute
-  TrendsRoute: typeof TrendsRoute
+  PatientsPatientIdForecastsRoute: typeof PatientsPatientIdForecastsRoute
+  PatientsPatientIdTimelineRoute: typeof PatientsPatientIdTimelineRoute
+  PatientsPatientIdTrendsRoute: typeof PatientsPatientIdTrendsRoute
+  PatientsPatientIdIndexRoute: typeof PatientsPatientIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/patients/$patientId/': {
+      id: '/patients/$patientId/'
+      path: '/patients/$patientId'
+      fullPath: '/patients/$patientId/'
+      preLoaderRoute: typeof PatientsPatientIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forecasts': {
-      id: '/forecasts'
-      path: '/forecasts'
-      fullPath: '/forecasts'
-      preLoaderRoute: typeof ForecastsRouteImport
+    '/patients/$patientId/forecasts': {
+      id: '/patients/$patientId/forecasts'
+      path: '/patients/$patientId/forecasts'
+      fullPath: '/patients/$patientId/forecasts'
+      preLoaderRoute: typeof PatientsPatientIdForecastsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/timeline': {
-      id: '/timeline'
-      path: '/timeline'
-      fullPath: '/timeline'
-      preLoaderRoute: typeof TimelineRouteImport
+    '/patients/$patientId/timeline': {
+      id: '/patients/$patientId/timeline'
+      path: '/patients/$patientId/timeline'
+      fullPath: '/patients/$patientId/timeline'
+      preLoaderRoute: typeof PatientsPatientIdTimelineRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trends': {
-      id: '/trends'
-      path: '/trends'
-      fullPath: '/trends'
-      preLoaderRoute: typeof TrendsRouteImport
+    '/patients/$patientId/trends': {
+      id: '/patients/$patientId/trends'
+      path: '/patients/$patientId/trends'
+      fullPath: '/patients/$patientId/trends'
+      preLoaderRoute: typeof PatientsPatientIdTrendsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ForecastsRoute: ForecastsRoute,
-  TimelineRoute: TimelineRoute,
-  TrendsRoute: TrendsRoute,
+  PatientsPatientIdForecastsRoute: PatientsPatientIdForecastsRoute,
+  PatientsPatientIdTimelineRoute: PatientsPatientIdTimelineRoute,
+  PatientsPatientIdTrendsRoute: PatientsPatientIdTrendsRoute,
+  PatientsPatientIdIndexRoute: PatientsPatientIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
