@@ -19,7 +19,7 @@ export const Route = createFileRoute("/forecasts")({
 const fmtTime = (t: number | string) =>
   new Date(Number(t)).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "UTC" });
 const fmtTick = (t: number | string) =>
-  new Date(Number(t)).toLocaleTimeString("en-US", { hour: "numeric", timeZone: "UTC" });
+  new Date(Number(t)).toLocaleString("en-US", { weekday: "short", hour: "numeric", timeZone: "UTC" });
 
 function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
   const pts = fc.points.map((p) => ({ ...p, band: p.lower != null && p.upper != null ? [p.lower, p.upper] : null }));
@@ -48,7 +48,7 @@ function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
           <ComposedChart data={pts} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
             <ReferenceArea x1={now} x2={end} fill="var(--primary-soft)" fillOpacity={0.55} />
             <CartesianGrid vertical={false} stroke="var(--hairline)" />
-            <XAxis dataKey="t" type="number" scale="time" domain={["dataMin", "dataMax"]} tickFormatter={fmtTick} tickCount={9} {...axisProps} />
+            <XAxis dataKey="t" type="number" scale="time" domain={["dataMin", "dataMax"]} tickFormatter={fmtTick} ticks={Array.from({ length: 9 }, (_, i) => pts[0]!.t + i * 6 * 3600 * 1000)} {...axisProps} />
             <YAxis domain={[70, 200]} width={48} {...axisProps} />
             <ReferenceLine x={now} stroke="var(--subtle)" strokeDasharray="2 4" label={{ value: "Now", position: "insideTopLeft", fill: "var(--muted-foreground)", fontSize: 11 }} />
             <Tooltip cursor={{ stroke: "var(--border)" }} content={<ChartTooltip format={fmtTime} unit="mg/dL" />} />

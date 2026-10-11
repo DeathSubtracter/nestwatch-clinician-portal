@@ -116,8 +116,8 @@ export function CurrentMetrics({ data }: { data: DemoData }) {
             >
               <div>
                 <div className="text-[13px] text-muted-foreground">{m.label}</div>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className={cn("num text-[28px] font-semibold leading-none", limited && "text-muted-foreground")}>{v.value}</span>
+                <div className="mt-2 flex flex-wrap items-baseline gap-x-1 gap-y-0.5">
+                  <span className={cn("num whitespace-nowrap text-[28px] font-semibold leading-none", limited && "text-muted-foreground")}>{v.value}</span>
                   <span className="text-[12px] text-muted-foreground">{v.unit}</span>
                 </div>
                 <div className={cn("mt-2 flex items-center gap-1 text-[12.5px]", contributing ? "text-watch-ink" : "text-muted-foreground")}>
@@ -141,7 +141,7 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
   const seriesFor = (key: string) =>
     key === "bp"
       ? data.series.bp.map((p) => ({ date: p.date, value: p.sys }))
-      : (data.series as Record<string, { date: string; value: number | null }[]>)[key];
+      : (data.series as unknown as Record<string, { date: string; value: number | null }[]>)[key];
   const color: Record<string, string> = {
     glucose: "var(--c-glucose)",
     resting_hr: "var(--c-hr)",
@@ -195,7 +195,7 @@ export function ObservedChangeSection({ data }: { data: DemoData }) {
                   <DirectionGlyph direction={r.direction} tone={r.contributing ? "watch" : "muted"} />
                   {r.change}
                 </div>
-                <div>{hasData && s ? <Sparkline data={s} color={color[r.key]} height={30} /> : <span className="text-[12px] text-subtle">Limited samples</span>}</div>
+                <div>{hasData && s ? <Sparkline data={s} color={color[r.key] ?? "var(--c-weight)"} height={30} /> : <span className="text-[12px] text-subtle">Limited samples</span>}</div>
               </li>
             );
           })}

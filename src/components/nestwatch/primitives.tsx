@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer, YAxis } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import type { Coverage, DailyPoint, Direction } from "@/data/demoData";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,10 @@ export function DirectionGlyph({ direction, tone = "muted" }: { direction: Direc
 
 export function Sparkline({ data, color, height = 32 }: { data: DailyPoint[]; color: string; height?: number }) {
   const id = `sp-${color.replace(/[^a-z]/gi, "")}`;
+  const vals = data.map((d) => d.value).filter((v): v is number => v != null);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const pad = (max - min) * 0.15 || 1;
   return (
     <div style={{ height }} className="w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -23,7 +27,8 @@ export function Sparkline({ data, color, height = 32 }: { data: DailyPoint[]; co
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <YAxis hide domain={["dataMin - 2", "dataMax + 2"]} />
+          <XAxis dataKey="date" hide />
+          <YAxis hide domain={[min - pad, max + pad]} />
           <Area type="monotone" dataKey="value" stroke={color} strokeWidth={1.5} fill={`url(#${id})`} connectNulls isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>

@@ -54,7 +54,7 @@ const sleepDaily = series(23, 7.1, 6.8, 0.5, 1, [17, 18, 21, 24, 25, 26, 28]);
 const tempDaily = series(29, 36.6, 36.62, 0.08, 2);
 const weightDaily: DailyPoint[] = Array.from({ length: DAYS }, (_, i) => ({
   date: dayIso(i),
-  value: [2, 13, 27].includes(i) ? [71.2, 71.4, 71.6][[2, 13, 27].indexOf(i)] : null,
+  value: ({ 2: 71.2, 13: 71.4, 27: 71.6 } as Record<number, number>)[i] ?? null,
 }));
 const bpDaily: BPPoint[] = (() => {
   const s = series(31, 119, 122.5, 3);
