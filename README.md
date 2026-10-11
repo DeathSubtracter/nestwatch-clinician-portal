@@ -22,3 +22,8 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Backend snapshot
+
+The clinician UI loads the exported dashboard from `/demo/maya-dashboard.json`.
+See [integration mapping and manual verification](docs/backend-snapshot.md).

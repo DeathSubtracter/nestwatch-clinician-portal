@@ -1,5 +1,6 @@
+import { useDashboard } from "@/data/dashboardContext";
 import { createFileRoute } from "@tanstack/react-router";
-import { getDashboard } from "@/data/demoData";
+
 import {
   CurrentMetrics,
   DataQuality,
@@ -14,9 +15,17 @@ export const Route = createFileRoute("/patients/$patientId/")({
   head: () => ({
     meta: [
       { title: "Overview — Nestwatch" },
-      { name: "description", content: "Multisignal maternal-health overview for Maya: current status, what changed, and patient context." },
+      {
+        name: "description",
+        content:
+          "Multisignal maternal-health overview for Maya: current status, what changed, and patient context.",
+      },
       { property: "og:title", content: "Overview — Nestwatch" },
-      { property: "og:description", content: "Clinician overview combining glucose, blood pressure, wearable and pregnancy context." },
+      {
+        property: "og:description",
+        content:
+          "Clinician overview combining glucose, blood pressure, wearable and pregnancy context.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -25,7 +34,7 @@ export const Route = createFileRoute("/patients/$patientId/")({
 });
 
 function Overview() {
-  const data = getDashboard(Route.useParams().patientId);
+  const data = useDashboard();
   return (
     <>
       <PatientHeader patient={data.patient} />
@@ -34,7 +43,7 @@ function Overview() {
       <ObservedChangeSection data={data} />
       <MultisignalExplanation status={data.pattern_status} />
       <PatientContext patient={data.patient} />
-      <DataQuality items={data.data_quality} />
+      <DataQuality items={data.data_quality} status={data.data_quality_status} />
     </>
   );
 }
