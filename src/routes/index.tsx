@@ -1,24 +1,44 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getDashboard } from "@/data/demoData";
+import {
+  CurrentMetrics,
+  DataQuality,
+  MultisignalExplanation,
+  ObservedChangeSection,
+  PatientContext,
+  PatientHeader,
+  StatusSummary,
+} from "@/components/nestwatch/overview";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Overview — Nestwatch" },
+      { name: "description", content: "Multisignal maternal-health overview for Maya: current status, what changed, and patient context." },
+      { property: "og:title", content: "Overview — Nestwatch" },
+      { property: "og:description", content: "Clinician overview combining glucose, blood pressure, wearable and pregnancy context." },
+    ],
+  }),
+  component: Overview,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Overview() {
+  const data = getDashboard();
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <PatientHeader patient={data.patient} />
+      <StatusSummary status={data.pattern_status} />
+      <CurrentMetrics data={data} />
+      <div className="grid gap-x-8 lg:grid-cols-[1fr_300px]">
+        <div className="min-w-0">
+          <ObservedChangeSection data={data} />
+          <MultisignalExplanation status={data.pattern_status} />
+        </div>
+        <aside className="mt-14 space-y-4 lg:pt-[60px]">
+          <PatientContext patient={data.patient} />
+          <DataQuality items={data.data_quality} />
+        </aside>
+      </div>
+    </>
   );
 }
