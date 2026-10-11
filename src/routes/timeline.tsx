@@ -12,6 +12,8 @@ export const Route = createFileRoute("/timeline")({
       { name: "description", content: "Unified timeline of measurements, sleep, symptoms, medication and pregnancy context for Maya." },
       { property: "og:title", content: "Timeline — Nestwatch" },
       { property: "og:description", content: "Fragmented maternal-health information brought together in one longitudinal view." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Timeline,
@@ -44,7 +46,7 @@ function Timeline() {
         {events.map((e, i) => {
           const Icon = icons[e.category];
           return (
-            <li key={e.title} className="relative grid grid-cols-[72px_32px_1fr] gap-4 py-5 animate-rise" style={{ animationDelay: `${i * 30}ms` }}>
+            <li key={e.title} className="relative grid grid-cols-[56px_24px_minmax(0,1fr)] gap-3 py-4 sm:grid-cols-[72px_32px_minmax(0,1fr)] sm:gap-4 animate-rise" style={{ animationDelay: `${i * 30}ms` }}>
               <div className="pt-1 text-right">
                 <div className="num text-[14px] font-medium">{e.date}</div>
                 <div className="num text-[12px] text-subtle">{e.time}</div>

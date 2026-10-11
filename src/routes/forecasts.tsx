@@ -11,6 +11,8 @@ export const Route = createFileRoute("/forecasts")({
       { name: "description", content: "Prototype 24-hour glucose outlook and 7-day blood pressure outlook for Maya." },
       { property: "og:title", content: "Forecasts — Nestwatch" },
       { property: "og:description", content: "Prototype forecasts on synthetic data, not clinically validated." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Forecasts,
@@ -23,8 +25,10 @@ const fmtTick = (t: number | string) =>
 
 function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
   const pts = fc.points.map((p) => ({ ...p, band: p.lower != null && p.upper != null ? [p.lower, p.upper] : null }));
-  const now = pts[287]!.t;
-  const end = pts.at(-1)!.t;
+  const now = pts[287]?.t;
+  const end = pts.at(-1)?.t;
+  const start = pts[0]?.t;
+  if (now == null || end == null || start == null) return <p>Glucose outlook unavailable.</p>;
   return (
     <section className="surface p-6 sm:p-8 animate-rise">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -48,7 +52,7 @@ function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
           <ComposedChart data={pts} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
             <ReferenceArea x1={now} x2={end} fill="var(--primary-soft)" fillOpacity={0.55} />
             <CartesianGrid vertical={false} stroke="var(--hairline)" />
-            <XAxis dataKey="t" type="number" scale="time" domain={["dataMin", "dataMax"]} tickFormatter={fmtTick} ticks={Array.from({ length: 9 }, (_, i) => pts[0]!.t + i * 6 * 3600 * 1000)} {...axisProps} />
+            <XAxis dataKey="t" type="number" scale="time" domain={["dataMin", "dataMax"]} tickFormatter={fmtTick} ticks={Array.from({ length: 9 }, (_, i) => start + i * 6 * 3600 * 1000)} minTickGap={32} {...axisProps} />
             <YAxis domain={[70, 200]} width={48} {...axisProps} />
             <ReferenceLine x={now} stroke="var(--subtle)" strokeDasharray="2 4" label={{ value: "Now", position: "insideTopLeft", fill: "var(--muted-foreground)", fontSize: 11 }} />
             <Tooltip cursor={{ stroke: "var(--border)" }} content={<ChartTooltip format={fmtTime} unit="mg/dL" />} />
@@ -65,7 +69,7 @@ function GlucoseForecastChart({ fc }: { fc: DemoData["glucose_forecast"] }) {
 function BPForecastCard({ fc }: { fc: DemoData["bp_forecast"] }) {
   const pct = fc.probability == null ? null : Math.round(fc.probability * 100);
   return (
-    <section className="mt-12">
+    <section className="mt-8">
       <SectionHeading title="7-day blood pressure outlook" subtitle="Whether a future BP measurement may meet the configured review event definition." />
       <div className="surface grid gap-8 p-6 sm:p-8 md:grid-cols-[1fr_1.1fr]">
         <div>
